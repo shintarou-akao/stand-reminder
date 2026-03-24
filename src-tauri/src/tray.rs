@@ -82,7 +82,7 @@ fn handle_menu_event(app: &AppHandle, event_id: &str) {
             let _ = modal::show_settings(app);
         }
         "quit" => {
-            app.exit(0);
+            std::process::exit(0);
         }
         _ => {}
     }
