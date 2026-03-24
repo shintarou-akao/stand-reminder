@@ -1,51 +1,45 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
+import { useEffect } from "react";
+import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { useAppStore, StateSnapshot } from "./store";
+import SettingsView from "./SettingsView";
 import "./App.css";
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+const windowLabel = getCurrentWebviewWindow().label;
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+function ModalView() {
+  const { setFromBackend } = useAppStore();
+
+  useEffect(() => {
+    const unlisten = listen<StateSnapshot>("state-changed", (event) => {
+      setFromBackend(event.payload);
+    });
+
+    return () => {
+      unlisten.then((fn) => fn());
+    };
+  }, [setFromBackend]);
 
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="overlay">
+      <div className="card">
+        <div className="icon">🧍</div>
+        <h1>立ってください</h1>
+        <p>長時間座っています。立ち上がりましょう！</p>
+        <div className="button-group">
+          <button className="btn-primary" onClick={() => invoke("stood_up")}>
+            立った
+          </button>
+        </div>
       </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+    </div>
   );
+}
+
+function App() {
+  if (windowLabel === "settings") return <SettingsView />;
+  return <ModalView />;
 }
 
 export default App;

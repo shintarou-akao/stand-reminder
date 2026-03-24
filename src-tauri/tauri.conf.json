@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "stand-reminder",
+  "productName": "Stand Reminder",
   "version": "0.1.0",
   "identifier": "com.shintaro.stand-reminder",
   "build": {
@@ -10,13 +10,8 @@
     "frontendDist": "../dist"
   },
   "app": {
-    "windows": [
-      {
-        "title": "stand-reminder",
-        "width": 800,
-        "height": 600
-      }
-    ],
+    "windows": [],
+    "macOSPrivateApi": false,
     "security": {
       "csp": null
     }
@@ -30,6 +25,9 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "macOS": {
+      "infoPlist": "Info.plist"
+    }
   }
 }
