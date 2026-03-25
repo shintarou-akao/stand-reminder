@@ -74,20 +74,32 @@ pub fn hide_modal(app: &AppHandle) {
 }
 
 pub fn show_settings(app: &AppHandle) -> tauri::Result<()> {
-    if let Some(w) = app.get_webview_window("settings") {
-        let _ = w.set_focus();
-        return Ok(());
+    let window = if let Some(w) = app.get_webview_window("settings") {
+        w
+    } else {
+        let (w, h) = (360.0_f64, 540.0_f64);
+        let win = WebviewWindowBuilder::new(app, "settings", WebviewUrl::App("index.html".into()))
+            .title("Stand Reminder - 設定")
+            .inner_size(w, h)
+            .resizable(false)
+            .focused(true)
+            .build()?;
+        move_to_cursor_monitor(&win, w, h);
+        win
+    };
+
+    // アプリをアクティブにしてからウィンドウをフォアグラウンドへ
+    #[cfg(target_os = "macos")]
+    {
+        let window_clone = window.clone();
+        let _ = window.app_handle().run_on_main_thread(move || {
+            use objc2_app_kit::NSApplication;
+            use objc2::MainThreadMarker;
+            let mtm = unsafe { MainThreadMarker::new_unchecked() };
+            NSApplication::sharedApplication(mtm).activate();
+            let _ = window_clone.set_focus();
+        });
     }
-
-    let (w, h) = (360.0_f64, 540.0_f64);
-
-    let window = WebviewWindowBuilder::new(app, "settings", WebviewUrl::App("index.html".into()))
-        .title("Stand Reminder - 設定")
-        .inner_size(w, h)
-        .resizable(false)
-        .build()?;
-
-    move_to_cursor_monitor(&window, w, h);
 
     Ok(())
 }
