@@ -47,6 +47,7 @@ function SettingsView() {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [soundName, setSoundName] = useState("Glass");
   const [soundNames, setSoundNames] = useState<string[]>(DEFAULT_SOUND_NAMES);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     invoke<Settings>("get_settings").then((s) => {
@@ -55,6 +56,7 @@ function SettingsView() {
       setTimes(s.specificTimes);
       setSoundEnabled(s.soundEnabled);
       setSoundName(s.soundName);
+      setLoaded(true);
     }).catch(console.error);
     invoke<string[]>("get_sound_names").then(setSoundNames).catch(console.error);
   }, []);
@@ -78,6 +80,8 @@ function SettingsView() {
     });
     getCurrentWebviewWindow().close();
   };
+
+  if (!loaded) return <div className="s-root" />;
 
   return (
     <div className="s-root">
