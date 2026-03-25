@@ -10,6 +10,32 @@ interface Settings {
   specificTimes: string[];
 }
 
+const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
+const MINUTES = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"));
+
+function TimePicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [hh, mm] = value.split(":");
+  return (
+    <div className="time-picker">
+      <select
+        className="time-select"
+        value={hh}
+        onChange={(e) => onChange(`${e.target.value}:${mm}`)}
+      >
+        {HOURS.map((h) => <option key={h} value={h}>{h}</option>)}
+      </select>
+      <span className="time-colon">:</span>
+      <select
+        className="time-select"
+        value={mm}
+        onChange={(e) => onChange(`${hh}:${e.target.value}`)}
+      >
+        {MINUTES.map((m) => <option key={m} value={m}>{m}</option>)}
+      </select>
+    </div>
+  );
+}
+
 function SettingsView() {
   const [mode, setMode] = useState<ReminderMode>("interval");
   const [mins, setMins] = useState(25);
@@ -80,12 +106,7 @@ function SettingsView() {
             <>
               {times.map((t, i) => (
                 <div key={i} className="s-row s-divider">
-                  <input
-                    className="time-input"
-                    type="time"
-                    value={t}
-                    onChange={(e) => updateTime(i, e.target.value)}
-                  />
+                  <TimePicker value={t} onChange={(v) => updateTime(i, v)} />
                   <button className="time-remove" onClick={() => removeTime(i)}>×</button>
                 </div>
               ))}
