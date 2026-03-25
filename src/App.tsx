@@ -24,9 +24,10 @@ function ModalView() {
   return (
     <div className="overlay">
       <div className="card">
-        <div className="icon-wrap">
-          <div className="icon-pulse" />
-          <div className="icon">🧍</div>
+        <div className="icon-row">
+          <span className="icon-emoji">🪑</span>
+          <span className="icon-arrow">→</span>
+          <span className="icon-emoji">🧍</span>
         </div>
         <div className="card-body">
           <h1>立つ時間です</h1>
