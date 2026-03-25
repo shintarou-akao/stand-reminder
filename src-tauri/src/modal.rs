@@ -77,7 +77,7 @@ pub fn show_settings(app: &AppHandle) -> tauri::Result<()> {
     let window = if let Some(w) = app.get_webview_window("settings") {
         w
     } else {
-        let (w, h) = (360.0_f64, 540.0_f64);
+        let (w, h) = (360.0_f64, 430.0_f64);
         let win = WebviewWindowBuilder::new(app, "settings", WebviewUrl::App("index.html".into()))
             .title("Stand Reminder - 設定")
             .inner_size(w, h)
