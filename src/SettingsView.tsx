@@ -84,7 +84,7 @@ function SettingsView() {
   if (!loaded) return <div className="s-root" />;
 
   return (
-    <div className="s-root">
+    <div className="s-scroll-root">
       <div className="s-body">
         <p className="s-title">リマインド設定</p>
 
@@ -167,15 +167,15 @@ function SettingsView() {
             </div>
           )}
         </div>
-      </div>
 
-      <div className="s-footer">
-        <button className="s-btn-cancel" onClick={() => getCurrentWebviewWindow().close()}>
-          キャンセル
-        </button>
-        <button className="s-btn-save" onClick={handleSave}>
-          保存
-        </button>
+        <div className="s-footer">
+          <button className="s-btn-cancel" onClick={() => getCurrentWebviewWindow().close()}>
+            キャンセル
+          </button>
+          <button className="s-btn-save" onClick={handleSave}>
+            保存
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -16,6 +16,10 @@ body {
   user-select: none;
 }
 
+body:has(.s-scroll-root) {
+  overflow: auto;
+}
+
 .overlay {
   width: 420px;
   height: 300px;
@@ -110,9 +114,17 @@ p {
   -webkit-font-smoothing: antialiased;
 }
 
+.s-scroll-root {
+  min-height: 100vh;
+  background: #f2f2f7;
+  color: #1c1c1e;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-y: auto;
+}
+
 .s-body {
-  flex: 1;
-  padding: 24px 20px 16px;
+  padding: 24px 20px 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -222,9 +234,7 @@ p {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  padding: 12px 20px;
-  border-top: 1px solid rgba(0,0,0,0.07);
-  background: #f2f2f7;
+  padding: 8px 0 4px;
 }
 
 .s-btn-cancel {
@@ -329,13 +339,13 @@ p {
 }
 
 .time-remove {
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: none;
-  background: #ff3b30;
-  color: #fff;
-  font-size: 0.75rem;
+  background: #e5e5ea;
+  color: #8e8e93;
+  font-size: 0.875rem;
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
@@ -343,10 +353,11 @@ p {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  opacity: 0.85;
-  transition: opacity 0.12s;
+  transition: background 0.12s;
   padding: 0;
 }
+
+.time-remove:hover { background: #d1d1d6; }
 
 .time-remove:hover { opacity: 1; }
 
@@ -463,7 +474,7 @@ p {
 
 /* ダークモード */
 @media (prefers-color-scheme: dark) {
-  .s-root    { background: #1c1c1e; color: #f5f5f7; }
+  .s-root, .s-scroll-root { background: #1c1c1e; color: #f5f5f7; }
   .s-title   { color: #636366; }
   .s-group   { background: #2c2c2e; box-shadow: none; }
   .s-divider { border-bottom-color: rgba(255,255,255,0.07); }
@@ -472,7 +483,7 @@ p {
   .stepper-btn:active { background: #545456; }
   .stepper-input { background: #3a3a3c; border-color: rgba(255,255,255,0.12); color: #f5f5f7; }
   .stepper-unit  { color: #636366; }
-  .s-footer      { background: #1c1c1e; border-top-color: rgba(255,255,255,0.07); }
+  .s-footer      { background: transparent; }
   .s-btn-cancel  { background: #3a3a3c; border-color: rgba(255,255,255,0.1); color: #f5f5f7; }
   .s-btn-cancel:hover { background: #48484a; }
   .time-select { background: #3a3a3c; color: #f5f5f7; }
@@ -482,4 +493,6 @@ p {
   .s-toggle-track { background: #3a3a3c; }
   .s-toggle input:checked + .s-toggle-track { background: #30d158; }
   .s-sound-select { background: #3a3a3c; border-color: rgba(255,255,255,0.12); color: #f5f5f7; }
+  .time-remove { background: #3a3a3c; color: #636366; }
+  .time-remove:hover { background: #48484a; }
 }
