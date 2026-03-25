@@ -469,8 +469,11 @@ p {
   padding: 0;
 }
 
-.s-preview-btn:hover  { background: #0070e0; }
-.s-preview-btn:active { background: #005cbf; }
+.s-preview-btn:hover:not(:disabled)  { background: #0070e0; }
+.s-preview-btn:active:not(:disabled) { background: #005cbf; }
+.s-preview-btn:disabled { background: #0a84ff; opacity: 0.35; cursor: not-allowed; }
+
+.s-disabled { opacity: 0.4; pointer-events: none; }
 
 /* ダークモード */
 @media (prefers-color-scheme: dark) {

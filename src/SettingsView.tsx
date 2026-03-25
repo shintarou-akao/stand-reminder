@@ -147,25 +147,25 @@ function SettingsView() {
               <span className="s-toggle-track" />
             </label>
           </div>
-          {soundEnabled && (
-            <div className="s-row s-divider s-sound-row">
-              <select
-                className="s-sound-select"
-                value={soundName}
-                onChange={(e) => setSoundName(e.target.value)}
-              >
-                {soundNames.map((n) => (
-                  <option key={n} value={n}>{n}</option>
-                ))}
-              </select>
-              <button
-                className="s-preview-btn"
-                onClick={() => invoke("preview_sound", { name: soundName })}
-              >
-                ▶
-              </button>
-            </div>
-          )}
+          <div className={`s-row s-divider s-sound-row${!soundEnabled ? " s-disabled" : ""}`}>
+            <select
+              className="s-sound-select"
+              value={soundName}
+              disabled={!soundEnabled}
+              onChange={(e) => setSoundName(e.target.value)}
+            >
+              {soundNames.map((n) => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+            <button
+              className="s-preview-btn"
+              disabled={!soundEnabled}
+              onClick={() => invoke("preview_sound", { name: soundName })}
+            >
+              ▶
+            </button>
+          </div>
         </div>
 
         <div className="s-footer">
