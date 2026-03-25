@@ -8,6 +8,8 @@ interface Settings {
   reminderMode: ReminderMode;
   remindIntervalMins: number;
   specificTimes: string[];
+  soundEnabled: boolean;
+  soundName: string;
 }
 
 const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
@@ -36,17 +38,25 @@ function TimePicker({ value, onChange }: { value: string; onChange: (v: string) 
   );
 }
 
+const DEFAULT_SOUND_NAMES = ["Glass", "Ping", "Pop", "Hero", "Tink", "Basso", "Blow", "Bottle", "Funk", "Morse"];
+
 function SettingsView() {
   const [mode, setMode] = useState<ReminderMode>("interval");
   const [mins, setMins] = useState(25);
   const [times, setTimes] = useState<string[]>([]);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [soundName, setSoundName] = useState("Glass");
+  const [soundNames, setSoundNames] = useState<string[]>(DEFAULT_SOUND_NAMES);
 
   useEffect(() => {
     invoke<Settings>("get_settings").then((s) => {
       setMode(s.reminderMode);
       setMins(s.remindIntervalMins);
       setTimes(s.specificTimes);
+      setSoundEnabled(s.soundEnabled);
+      setSoundName(s.soundName);
     }).catch(console.error);
+    invoke<string[]>("get_sound_names").then(setSoundNames).catch(console.error);
   }, []);
 
   const clamp = (v: number) => Math.max(1, Math.min(999, v));
@@ -64,7 +74,7 @@ function SettingsView() {
 
   const handleSave = async () => {
     await invoke("save_settings", {
-      settings: { reminderMode: mode, remindIntervalMins: mins, specificTimes: [...times].sort() },
+      settings: { reminderMode: mode, remindIntervalMins: mins, specificTimes: [...times].sort(), soundEnabled, soundName },
     });
     getCurrentWebviewWindow().close();
   };
@@ -115,6 +125,42 @@ function SettingsView() {
                 <button className="s-add-btn" onClick={addTime}>＋ 時刻を追加</button>
               </div>
             </>
+          )}
+        </div>
+
+        <p className="s-title">通知</p>
+
+        <div className="s-group">
+          <div className="s-row">
+            <span className="s-icon">🔔</span>
+            <span className="s-label">通知サウンド</span>
+            <label className="s-toggle">
+              <input
+                type="checkbox"
+                checked={soundEnabled}
+                onChange={(e) => setSoundEnabled(e.target.checked)}
+              />
+              <span className="s-toggle-track" />
+            </label>
+          </div>
+          {soundEnabled && (
+            <div className="s-row s-divider s-sound-row">
+              <select
+                className="s-sound-select"
+                value={soundName}
+                onChange={(e) => setSoundName(e.target.value)}
+              >
+                {soundNames.map((n) => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
+              <button
+                className="s-preview-btn"
+                onClick={() => invoke("preview_sound", { name: soundName })}
+              >
+                ▶
+              </button>
+            </div>
           )}
         </div>
       </div>

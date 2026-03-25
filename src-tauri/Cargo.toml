@@ -24,4 +24,5 @@ serde_json = "1"
 tokio = { version = "1", features = ["time"] }
 chrono = "0.4"
 objc2 = "0.6"
-objc2-app-kit = { version = "0.3", features = ["NSApplication"] }
+objc2-app-kit = { version = "0.3", features = ["NSApplication", "NSSound"] }
+objc2-foundation = { version = "0.3", features = ["NSString"] }

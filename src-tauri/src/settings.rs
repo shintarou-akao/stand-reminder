@@ -9,12 +9,24 @@ pub enum ReminderMode {
     SpecificTimes,
 }
 
+fn default_sound_enabled() -> bool {
+    true
+}
+
+fn default_sound_name() -> String {
+    "Glass".to_string()
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Settings {
     pub reminder_mode: ReminderMode,
     pub remind_interval_mins: u64,
     pub specific_times: Vec<String>, // "HH:MM" 形式
+    #[serde(default = "default_sound_enabled")]
+    pub sound_enabled: bool,
+    #[serde(default = "default_sound_name")]
+    pub sound_name: String,
 }
 
 impl Default for Settings {
@@ -23,6 +35,8 @@ impl Default for Settings {
             reminder_mode: ReminderMode::Interval,
             remind_interval_mins: 25,
             specific_times: vec![],
+            sound_enabled: true,
+            sound_name: "Glass".to_string(),
         }
     }
 }

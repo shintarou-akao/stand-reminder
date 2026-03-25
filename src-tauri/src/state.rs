@@ -14,6 +14,8 @@ pub struct AppState {
     pub reminder_mode: ReminderMode,
     pub sit_duration_secs: u64,
     pub specific_times: Vec<String>,
+    pub sound_enabled: bool,
+    pub sound_name: String,
 }
 
 impl AppState {
@@ -25,6 +27,8 @@ impl AppState {
             reminder_mode: settings.reminder_mode.clone(),
             sit_duration_secs: sit,
             specific_times: settings.specific_times.clone(),
+            sound_enabled: settings.sound_enabled,
+            sound_name: settings.sound_name.clone(),
         }
     }
 
@@ -32,6 +36,8 @@ impl AppState {
         self.reminder_mode = settings.reminder_mode.clone();
         self.sit_duration_secs = settings.remind_interval_mins * 60;
         self.specific_times = settings.specific_times.clone();
+        self.sound_enabled = settings.sound_enabled;
+        self.sound_name = settings.sound_name.clone();
     }
 
     pub fn snapshot(&self) -> StateSnapshot {

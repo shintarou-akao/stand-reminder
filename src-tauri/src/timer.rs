@@ -4,6 +4,7 @@ use tauri::{AppHandle, Emitter};
 use tokio::time::MissedTickBehavior;
 
 use crate::modal;
+use crate::sound;
 use crate::state::AppState;
 use crate::tray;
 
@@ -53,6 +54,16 @@ pub fn start_timer(app: AppHandle, state: Arc<Mutex<AppState>>) {
             if show_modal {
                 tray::rebuild_menu(&app, &snapshot);
                 last_displayed_mins = u64::MAX;
+                let (sound_enabled, sound_name) = {
+                    let s = state.lock().unwrap();
+                    (s.sound_enabled, s.sound_name.clone())
+                };
+                if sound_enabled {
+                    let app_clone = app.clone();
+                    let _ = app_clone.run_on_main_thread(move || {
+                        sound::play_sound(&sound_name);
+                    });
+                }
                 let _ = modal::show_modal(&app);
             } else {
                 let current_mins = (snapshot.timer_remaining_secs + 59) / 60;

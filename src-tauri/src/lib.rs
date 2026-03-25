@@ -1,5 +1,6 @@
 mod modal;
 mod settings;
+mod sound;
 mod state;
 mod timer;
 mod tray;
@@ -36,6 +37,18 @@ fn save_settings(
 }
 
 #[tauri::command]
+fn preview_sound(app: AppHandle, name: String) {
+    let _ = app.run_on_main_thread(move || {
+        sound::play_sound(&name);
+    });
+}
+
+#[tauri::command]
+fn get_sound_names() -> Vec<&'static str> {
+    sound::SOUND_NAMES.to_vec()
+}
+
+#[tauri::command]
 fn stood_up(app: AppHandle, state: tauri::State<'_, Arc<Mutex<AppState>>>) {
     let snapshot = {
         let mut s = state.lock().unwrap();
@@ -57,7 +70,9 @@ pub fn run() {
             get_state,
             get_settings,
             save_settings,
-            stood_up
+            stood_up,
+            preview_sound,
+            get_sound_names
         ])
         .setup(move |app| {
             let loaded = settings::load(app.handle());
