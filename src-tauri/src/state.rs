@@ -21,7 +21,7 @@ pub struct AppState {
 impl AppState {
     pub fn from_settings(settings: &Settings) -> Self {
         let sit = settings.remind_interval_mins * 60;
-        Self {
+        let mut s = Self {
             timer_remaining_secs: sit,
             timer_running: true,
             reminder_mode: settings.reminder_mode.clone(),
@@ -29,7 +29,9 @@ impl AppState {
             specific_times: settings.specific_times.clone(),
             sound_enabled: settings.sound_enabled,
             sound_name: settings.sound_name.clone(),
-        }
+        };
+        s.reset_timer();
+        s
     }
 
     pub fn apply_settings(&mut self, settings: &Settings) {

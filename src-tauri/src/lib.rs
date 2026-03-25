@@ -79,7 +79,7 @@ pub fn run() {
             {
                 let mut s = app_state.lock().unwrap();
                 s.apply_settings(&loaded);
-                s.timer_remaining_secs = s.sit_duration_secs;
+                s.reset_timer();
             }
 
             // macOSPrivateApi が activation policy を Regular に変えてしまうため
