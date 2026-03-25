@@ -24,14 +24,18 @@ function ModalView() {
   return (
     <div className="overlay">
       <div className="card">
-        <div className="icon">🧍</div>
-        <h1>立ってください</h1>
-        <p>長時間座っています。立ち上がりましょう！</p>
-        <div className="button-group">
-          <button className="btn-primary" onClick={() => invoke("stood_up")}>
-            立った
-          </button>
+        <div className="icon-wrap">
+          <div className="icon-pulse" />
+          <div className="icon">🧍</div>
         </div>
+        <div className="card-body">
+          <h1>立つ時間です</h1>
+          <p>座りすぎに気をつけて。<br />体を動かしてリフレッシュ！</p>
+        </div>
+        <button className="btn-stand" onClick={() => invoke("stood_up")}>
+          <span className="btn-icon">✓</span>
+          立ち上がった！
+        </button>
       </div>
     </div>
   );

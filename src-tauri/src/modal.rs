@@ -47,7 +47,7 @@ pub fn show_modal(app: &AppHandle) -> tauri::Result<()> {
         return Ok(());
     }
 
-    let (w, h) = (420.0_f64, 300.0_f64);
+    let (w, h) = (420.0_f64, 360.0_f64);
 
     let window = WebviewWindowBuilder::new(app, "modal", WebviewUrl::App("index.html".into()))
         .title("Stand Reminder")
@@ -58,6 +58,7 @@ pub fn show_modal(app: &AppHandle) -> tauri::Result<()> {
         .maximizable(false)
         .resizable(false)
         .decorations(false)
+        .transparent(true)
         .focused(true)
         .skip_taskbar(true)
         .build()?;
