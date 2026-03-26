@@ -30,8 +30,11 @@ Rather than fighting with hardware, I built this app as a simple software soluti
 Download the latest `.dmg` from the [Releases](https://github.com/shintarou-akao/stand-reminder/releases) page.
 
 1. Open the `.dmg` file and drag **Stand Reminder** to your Applications folder
-2. On first launch, macOS may block the app since it is not notarized. To open it:
-   - Right-click the app → **Open** → **Open** in the dialog
+2. Run the following command in Terminal to remove the quarantine attribute:
+   ```bash
+   xattr -cr "/Applications/Stand Reminder.app"
+   ```
+3. Launch the app normally
 
 > **Note:** The pre-built binary is for Apple Silicon (M1/M2/M3). Intel Mac users need to build from source.
 
