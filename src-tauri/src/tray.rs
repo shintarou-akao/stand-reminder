@@ -37,14 +37,14 @@ fn notify_time_label(remaining_secs: u64) -> String {
 
 fn build_menu(app: &AppHandle, snapshot: &StateSnapshot) -> tauri::Result<Menu<tauri::Wry>> {
     let label = match (snapshot.timer_running, snapshot.timer_remaining_secs) {
-        (true, _) => format!("次の通知: {}", notify_time_label(snapshot.timer_remaining_secs)),
-        (false, 0) => "通知なし".to_string(),
-        (false, _) => "通知中...".to_string(),
+        (true, _) => format!("Next: {}", notify_time_label(snapshot.timer_remaining_secs)),
+        (false, 0) => "No reminders".to_string(),
+        (false, _) => "Notifying...".to_string(),
     };
     let status = MenuItem::with_id(app, "status", &label, false, None::<&str>)?;
     let sep = PredefinedMenuItem::separator(app)?;
-    let settings = MenuItem::with_id(app, "settings", "設定", true, None::<&str>)?;
-    let quit = MenuItem::with_id(app, "quit", "終了", true, None::<&str>)?;
+    let settings = MenuItem::with_id(app, "settings", "Settings", true, None::<&str>)?;
+    let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
 
     Menu::with_items(app, &[&status, &sep, &settings, &quit])
 }

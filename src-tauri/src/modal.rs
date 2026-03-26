@@ -80,7 +80,7 @@ pub fn show_settings(app: &AppHandle) -> tauri::Result<()> {
     } else {
         let (w, h) = (360.0_f64, 430.0_f64);
         let win = WebviewWindowBuilder::new(app, "settings", WebviewUrl::App("index.html".into()))
-            .title("Stand Reminder - 設定")
+            .title("Stand Reminder - Settings")
             .inner_size(w, h)
             .resizable(false)
             .focused(true)

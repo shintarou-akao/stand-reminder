@@ -1,40 +1,48 @@
 # Stand Reminder
 
-長時間座り続けるのを防ぐ、macOS用のメニューバー常駐アプリです。
+A macOS menu bar app to prevent prolonged sitting.
 
-## 機能
+## Background
 
-- **メニューバー常駐** — Dock に表示されず、常にバックグラウンドで動作
-- **2つのリマインドモード**
-  - **通知間隔モード** — 指定した分数ごとにリマインド（デフォルト25分）
-  - **時刻指定モード** — 決まった時刻にリマインド（複数設定可能）
-- **モーダル通知** — 他のウィンドウの上に表示され、「立った」ボタンで解除
-- **スリープ検知** — Macのスリープ復帰後にタイマーをリセット
-- **マルチモニター対応** — カーソルのあるモニターの中央に通知を表示
-- **ダークモード対応**
+I use a sit-stand desk, but my particular model has no built-in scheduling feature to raise the desk automatically at set times. As a result, I rarely ended up actually standing.
 
-## 動作環境
+My first workaround was a SwitchBot finger robot — a small device that physically presses buttons — which I set up to push the desk's raise button on a schedule. It worked for a while, but the Bluetooth connection kept dropping unreliably, so I gave up on that approach.
 
-- macOS（Apple Silicon / Intel）
+Rather than fighting with hardware, I built this app as a simple software solution: a menu bar reminder that prompts me to stand up at the right time.
 
-## インストール
+## Features
 
-ビルド済みバイナリは提供していません。ソースからビルドしてください。
+- **Menu bar resident** — Runs in the background without appearing in the Dock
+- **Two reminder modes**
+  - **Interval mode** — Reminds you at a set interval (default: 25 minutes)
+  - **Specific times mode** — Reminds you at fixed times (multiple times supported)
+- **Modal notification** — Appears above all other windows; dismiss with the "I stood up!" button
+- **Sleep detection** — Resets the timer after waking from sleep
+- **Multi-monitor support** — Notification appears centered on the monitor where the cursor is
+- **Dark mode support**
 
-## ビルド手順
+## Requirements
 
-### 前提条件
+- macOS (Apple Silicon / Intel)
 
-- [Rust](https://www.rust-lang.org/tools/install)（最新の stable）
-- [Node.js](https://nodejs.org/) v18以上
+## Installation
+
+No pre-built binaries are provided. Please build from source.
+
+## Build Instructions
+
+### Prerequisites
+
+- [Rust](https://www.rust-lang.org/tools/install) (latest stable)
+- [Node.js](https://nodejs.org/) v18 or later
 - [pnpm](https://pnpm.io/)
 
 ```bash
-# pnpm がない場合
+# If pnpm is not installed
 npm install -g pnpm
 ```
 
-### ビルド
+### Build
 
 ```bash
 git clone https://github.com/yourusername/stand-reminder.git
@@ -43,19 +51,19 @@ pnpm install
 pnpm tauri build
 ```
 
-ビルドされたアプリは `src-tauri/target/release/bundle/macos/Stand Reminder.app` に生成されます。
+The built app will be generated at `src-tauri/target/release/bundle/macos/Stand Reminder.app`.
 
-### 開発
+### Development
 
 ```bash
 pnpm tauri dev
 ```
 
-## 技術スタック
+## Tech Stack
 
-- **フロントエンド** — React 19 + TypeScript + Zustand + Vite
-- **バックエンド** — Rust + Tauri v2 + tokio
+- **Frontend** — React 19 + TypeScript + Zustand + Vite
+- **Backend** — Rust + Tauri v2 + tokio
 
-## ライセンス
+## License
 
-MIT License — 詳細は [LICENSE](LICENSE) を参照してください。
+MIT License — see [LICENSE](LICENSE) for details.

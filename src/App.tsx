@@ -30,12 +30,12 @@ function ModalView() {
           <span className="icon-emoji">🧍</span>
         </div>
         <div className="card-body">
-          <h1>立つ時間です</h1>
-          <p>座りすぎに気をつけて。<br />体を動かしてリフレッシュ！</p>
+          <h1>Time to Stand</h1>
+          <p>You've been sitting too long.<br />Move around and refresh!</p>
         </div>
         <button className="btn-stand" onClick={() => invoke("stood_up")}>
           <span className="btn-icon">✓</span>
-          立ち上がった！
+          I stood up!
         </button>
       </div>
     </div>

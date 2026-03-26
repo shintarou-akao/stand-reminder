@@ -86,13 +86,13 @@ function SettingsView() {
   return (
     <div className="s-scroll-root">
       <div className="s-body">
-        <p className="s-title">リマインド設定</p>
+        <p className="s-title">Reminder Settings</p>
 
         <div className={`s-group${mode !== "interval" ? " s-inactive" : ""}`}>
           <div className="s-row" onClick={() => setMode("interval")} style={{ cursor: "pointer" }}>
             <input type="radio" className="s-radio" readOnly checked={mode === "interval"} />
             <span className="s-icon">⏰</span>
-            <span className="s-label">通知間隔</span>
+            <span className="s-label">Interval</span>
             <div className="stepper" onClick={(e) => e.stopPropagation()}>
               <button className="stepper-btn" disabled={mode !== "interval"} onClick={() => setMins(clamp(mins - 1))}>−</button>
               <input
@@ -104,8 +104,8 @@ function SettingsView() {
                 disabled={mode !== "interval"}
                 onChange={(e) => setMins(clamp(parseInt(e.target.value) || 1))}
               />
-              <span className="stepper-unit">分</span>
-              <button className="stepper-btn" disabled={mode !== "interval"} onClick={() => setMins(clamp(mins + 1))}>＋</button>
+              <span className="stepper-unit">min</span>
+              <button className="stepper-btn" disabled={mode !== "interval"} onClick={() => setMins(clamp(mins + 1))}>+</button>
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@ function SettingsView() {
           <div className="s-row" onClick={() => setMode("specificTimes")} style={{ cursor: "pointer" }}>
             <input type="radio" className="s-radio" readOnly checked={mode === "specificTimes"} />
             <span className="s-icon">🕐</span>
-            <span className="s-label">時刻指定</span>
+            <span className="s-label">Specific Times</span>
           </div>
           {mode === "specificTimes" && (
             <>
@@ -124,20 +124,20 @@ function SettingsView() {
                   <button className="time-remove" onClick={() => removeTime(i)}>×</button>
                 </div>
               ))}
-              {times.length === 0 && <div className="s-empty">時刻を追加してください</div>}
+              {times.length === 0 && <div className="s-empty">Please add a time</div>}
               <div className="s-row s-add-row">
-                <button className="s-add-btn" onClick={addTime}>＋ 時刻を追加</button>
+                <button className="s-add-btn" onClick={addTime}>+ Add time</button>
               </div>
             </>
           )}
         </div>
 
-        <p className="s-title">通知</p>
+        <p className="s-title">Notification</p>
 
         <div className="s-group">
           <div className="s-row">
             <span className="s-icon">🔔</span>
-            <span className="s-label">通知サウンド</span>
+            <span className="s-label">Notification Sound</span>
             <label className="s-toggle">
               <input
                 type="checkbox"
@@ -170,10 +170,10 @@ function SettingsView() {
 
         <div className="s-footer">
           <button className="s-btn-cancel" onClick={() => getCurrentWebviewWindow().close()}>
-            キャンセル
+            Cancel
           </button>
           <button className="s-btn-save" onClick={handleSave}>
-            保存
+            Save
           </button>
         </div>
       </div>
