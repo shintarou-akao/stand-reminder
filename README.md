@@ -23,13 +23,19 @@ Rather than fighting with hardware, I built this app as a simple software soluti
 
 ## Requirements
 
-- macOS (Apple Silicon / Intel)
+- macOS (Apple Silicon)
 
 ## Installation
 
-No pre-built binaries are provided. Please build from source.
+Download the latest `.dmg` from the [Releases](https://github.com/shintarou-akao/stand-reminder/releases) page.
 
-## Build Instructions
+1. Open the `.dmg` file and drag **Stand Reminder** to your Applications folder
+2. On first launch, macOS may block the app since it is not notarized. To open it:
+   - Right-click the app → **Open** → **Open** in the dialog
+
+> **Note:** The pre-built binary is for Apple Silicon (M1/M2/M3). Intel Mac users need to build from source.
+
+## Build from Source
 
 ### Prerequisites
 
@@ -45,7 +51,7 @@ npm install -g pnpm
 ### Build
 
 ```bash
-git clone https://github.com/yourusername/stand-reminder.git
+git clone https://github.com/shintarou-akao/stand-reminder.git
 cd stand-reminder
 pnpm install
 pnpm tauri build
