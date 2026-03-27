@@ -9,11 +9,21 @@ use crate::state::AppState;
 use crate::tray;
 
 pub fn start_timer(app: AppHandle, state: Arc<Mutex<AppState>>) {
+    // 起動直後の不要な update_title 呼び出しを防ぐため、現在値で初期化
+    let initial_mins = {
+        let s = state.lock().unwrap();
+        if s.timer_running {
+            (s.timer_remaining_secs + 59) / 60
+        } else {
+            u64::MAX
+        }
+    };
+
     tauri::async_runtime::spawn(async move {
         let mut interval = tokio::time::interval(Duration::from_secs(1));
         interval.set_missed_tick_behavior(MissedTickBehavior::Skip);
         let mut last_tick = Instant::now();
-        let mut last_displayed_mins = u64::MAX;
+        let mut last_displayed_mins = initial_mins;
 
         loop {
             interval.tick().await;

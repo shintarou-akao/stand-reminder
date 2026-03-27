@@ -64,7 +64,7 @@ fn stood_up(app: AppHandle, state: tauri::State<'_, Arc<Mutex<AppState>>>) {
 pub fn run() {
     let app_state = Arc::new(Mutex::new(AppState::from_settings(&settings::Settings::default())));
 
-    tauri::Builder::default()
+    let app = tauri::Builder::default()
         .manage(app_state.clone())
         .invoke_handler(tauri::generate_handler![
             get_state,
@@ -82,43 +82,17 @@ pub fn run() {
                 s.reset_timer();
             }
 
-            // macOSPrivateApi が activation policy を Regular に変えてしまうため
-            // Accessory に戻す（Dock非表示・メニューバー名変化なし・メニュー表示可能）
-            #[cfg(target_os = "macos")]
-            {
-                use objc2_app_kit::{NSApplication, NSApplicationActivationPolicy};
-                unsafe {
-                    let mtm = objc2::MainThreadMarker::new_unchecked();
-                    NSApplication::sharedApplication(mtm)
-                        .setActivationPolicy(NSApplicationActivationPolicy::Accessory);
-                }
-            }
-
             tray::setup_tray(app)?;
             timer::start_timer(app.handle().clone(), app_state.clone());
 
             Ok(())
         })
         .build(tauri::generate_context!())
-        .expect("error building tauri application")
-        .run(|_app, event| {
-            match event {
-                tauri::RunEvent::Ready => {
-                    // setup 後に Tauri が policy を上書きする場合に備えて再設定
-                    #[cfg(target_os = "macos")]
-                    {
-                        use objc2_app_kit::{NSApplication, NSApplicationActivationPolicy};
-                        unsafe {
-                            let mtm = objc2::MainThreadMarker::new_unchecked();
-                            NSApplication::sharedApplication(mtm)
-                                .setActivationPolicy(NSApplicationActivationPolicy::Accessory);
-                        }
-                    }
-                }
-                tauri::RunEvent::ExitRequested { api, .. } => {
-                    api.prevent_exit();
-                }
-                _ => {}
-            }
-        });
+        .expect("error building tauri application");
+
+    app.run(|_app, event| {
+        if let tauri::RunEvent::ExitRequested { api, .. } = event {
+            api.prevent_exit();
+        }
+    });
 }
