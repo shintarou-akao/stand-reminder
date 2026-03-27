@@ -1,5 +1,9 @@
 # Stand Reminder
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-macOS%20(Apple%20Silicon)-lightgrey)](https://github.com/shintarou-akao/stand-reminder/releases)
+[![GitHub release](https://img.shields.io/github/v/release/shintarou-akao/stand-reminder)](https://github.com/shintarou-akao/stand-reminder/releases)
+
 A macOS menu bar app to prevent prolonged sitting.
 
 ## Screenshots
