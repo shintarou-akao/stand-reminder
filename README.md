@@ -4,13 +4,20 @@ A macOS menu bar app to prevent prolonged sitting.
 
 ## Screenshots
 
-**Settings**
-
-![Settings](docs/screenshots/settings.png)
-
-**Reminder Notification**
-
-![Reminder Notification](docs/screenshots/reminder.png)
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <b>Settings</b><br><br>
+        <img src="docs/screenshots/settings.png" width="320">
+      </td>
+      <td align="center">
+        <b>Reminder Notification</b><br><br>
+        <img src="docs/screenshots/reminder.png" width="320">
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## Background
 
