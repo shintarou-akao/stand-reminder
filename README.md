@@ -29,13 +29,14 @@ Rather than fighting with hardware, I built this app as a simple software soluti
 
 ## Features
 
-- **Menu bar resident** — Runs in the background without appearing in the Dock
+- **Menu bar app** — Accessible from the menu bar
 - **Two reminder modes**
   - **Interval mode** — Reminds you at a set interval (default: 25 minutes)
   - **Specific times mode** — Reminds you at fixed times (multiple times supported)
 - **Modal notification** — Appears above all other windows; dismiss with the "I stood up!" button
 - **Sleep detection** — Resets the timer after waking from sleep
 - **Multi-monitor support** — Notification appears centered on the monitor where the cursor is
+- **Notification sound** — Choose from built-in macOS sounds; can be disabled
 - **Dark mode support**
 
 ## Requirements
