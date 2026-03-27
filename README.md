@@ -2,6 +2,16 @@
 
 A macOS menu bar app to prevent prolonged sitting.
 
+## Screenshots
+
+**Settings**
+
+![Settings](docs/screenshots/settings.png)
+
+**Reminder Notification**
+
+![Reminder Notification](docs/screenshots/reminder.png)
+
 ## Background
 
 I use a sit-stand desk, but my particular model has no built-in scheduling feature to raise the desk automatically at set times. As a result, I rarely ended up actually standing.
