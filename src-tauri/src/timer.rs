@@ -1,5 +1,5 @@
 use std::sync::{Arc, Mutex};
-use std::time::{Duration, Instant};
+use std::time::{Duration, SystemTime};
 use tauri::{AppHandle, Emitter};
 use tokio::time::MissedTickBehavior;
 
@@ -22,15 +22,17 @@ pub fn start_timer(app: AppHandle, state: Arc<Mutex<AppState>>) {
     tauri::async_runtime::spawn(async move {
         let mut interval = tokio::time::interval(Duration::from_secs(1));
         interval.set_missed_tick_behavior(MissedTickBehavior::Skip);
-        let mut last_tick = Instant::now();
+        // スリープ検知には壁時計(SystemTime)を使う。
+        // Instant は macOS でスリープ中に進まないため elapsed が正確に計測できない。
+        let mut last_tick_wall = SystemTime::now();
         let mut last_displayed_mins = initial_mins;
 
         loop {
             interval.tick().await;
 
-            let now = Instant::now();
-            let elapsed = now.duration_since(last_tick);
-            last_tick = now;
+            let now_wall = SystemTime::now();
+            let elapsed = now_wall.duration_since(last_tick_wall).unwrap_or_default();
+            last_tick_wall = now_wall;
 
             // スリープ復帰検知: 10秒以上経過していたらリセット
             if elapsed.as_secs() > 10 {
