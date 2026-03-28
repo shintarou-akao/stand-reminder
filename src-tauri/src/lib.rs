@@ -75,6 +75,12 @@ pub fn run() {
             get_sound_names
         ])
         .setup(move |app| {
+            // tao のデフォルトは Regular ポリシーで、applicationDidFinishLaunching 時に
+            // activateIgnoringOtherApps が呼ばれ NSStatusItem メニュー初回表示と干渉する。
+            // Accessory に設定することで回避する（本番は LSUIElement が担うが dev では効かない）。
+            #[cfg(target_os = "macos")]
+            app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+
             let loaded = settings::load(app.handle());
             {
                 let mut s = app_state.lock().unwrap();

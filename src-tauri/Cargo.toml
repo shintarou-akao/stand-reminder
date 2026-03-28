@@ -1,6 +1,6 @@
 [package]
 name = "stand-reminder"
-version = "0.1.3"
+version = "0.1.4"
 description = "macOS menu bar app to remind you to stand up and avoid sitting too long"
 authors = ["shintarou-akao"]
 edition = "2021"
