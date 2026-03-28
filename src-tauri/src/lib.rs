@@ -7,7 +7,7 @@ mod tray;
 
 use std::sync::{Arc, Mutex};
 use state::AppState;
-use tauri::{AppHandle, Emitter, Manager};
+use tauri::{AppHandle, Emitter};
 
 #[tauri::command]
 fn get_state(state: tauri::State<'_, Arc<Mutex<AppState>>>) -> state::StateSnapshot {
@@ -64,7 +64,7 @@ fn stood_up(app: AppHandle, state: tauri::State<'_, Arc<Mutex<AppState>>>) {
 pub fn run() {
     let app_state = Arc::new(Mutex::new(AppState::from_settings(&settings::Settings::default())));
 
-    let app = tauri::Builder::default()
+    let mut app = tauri::Builder::default()
         .manage(app_state.clone())
         .invoke_handler(tauri::generate_handler![
             get_state,
@@ -82,32 +82,20 @@ pub fn run() {
                 s.reset_timer();
             }
 
-            // トレイ作成・タイマー開始は RunEvent::Ready 後に遅延する。
-            // tao が applicationDidFinishLaunching で Regular ポリシー + activateIgnoringOtherApps
-            // を実行するため、その直後に Accessory へ切り替え、activation が落ち着いた
-            // 次のイベントループ反復でトレイを作成することで初回メニュー即閉じを回避する。
-            let handle = app.handle().clone();
-            let state = app.state::<Arc<Mutex<AppState>>>().inner().clone();
-            app.handle().run_on_main_thread(move || {
-                #[cfg(target_os = "macos")]
-                {
-                    use objc2::MainThreadMarker;
-                    use objc2_app_kit::{NSApplication, NSApplicationActivationPolicy};
-                    unsafe {
-                        let mtm = MainThreadMarker::new_unchecked();
-                        NSApplication::sharedApplication(mtm)
-                            .setActivationPolicy(NSApplicationActivationPolicy::Accessory);
-                    }
-                }
-
-                tray::setup_tray(&handle).expect("failed to setup tray");
-                timer::start_timer(handle, state);
-            })?;
+            tray::setup_tray(app.handle())?;
+            timer::start_timer(app.handle().clone(), app_state.clone());
 
             Ok(())
         })
         .build(tauri::generate_context!())
         .expect("error building tauri application");
+
+    // build() 直後・run() 前に呼ぶことで self.runtime が Some のまま tao の delegate に
+    // 直接 Accessory ポリシーを書き込める。これにより applicationDidFinishLaunching で
+    // tao が Regular + activateIgnoringOtherApps を実行するのを防ぎ、
+    // 初回メニュークリック即閉じ問題を解消する。
+    #[cfg(target_os = "macos")]
+    app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
     app.run(|_app, event| {
         if let tauri::RunEvent::ExitRequested { api, .. } = event {
