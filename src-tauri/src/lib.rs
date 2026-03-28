@@ -7,7 +7,7 @@ mod tray;
 
 use std::sync::{Arc, Mutex};
 use state::AppState;
-use tauri::{AppHandle, Emitter};
+use tauri::{AppHandle, Emitter, Manager};
 
 #[tauri::command]
 fn get_state(state: tauri::State<'_, Arc<Mutex<AppState>>>) -> state::StateSnapshot {
@@ -75,12 +75,6 @@ pub fn run() {
             get_sound_names
         ])
         .setup(move |app| {
-            // tao のデフォルトは Regular ポリシーで、applicationDidFinishLaunching 時に
-            // activateIgnoringOtherApps が呼ばれ NSStatusItem メニュー初回表示と干渉する。
-            // Accessory に設定することで回避する（本番は LSUIElement が担うが dev では効かない）。
-            #[cfg(target_os = "macos")]
-            app.set_activation_policy(tauri::ActivationPolicy::Accessory);
-
             let loaded = settings::load(app.handle());
             {
                 let mut s = app_state.lock().unwrap();
@@ -88,8 +82,27 @@ pub fn run() {
                 s.reset_timer();
             }
 
-            tray::setup_tray(app)?;
-            timer::start_timer(app.handle().clone(), app_state.clone());
+            // トレイ作成・タイマー開始は RunEvent::Ready 後に遅延する。
+            // tao が applicationDidFinishLaunching で Regular ポリシー + activateIgnoringOtherApps
+            // を実行するため、その直後に Accessory へ切り替え、activation が落ち着いた
+            // 次のイベントループ反復でトレイを作成することで初回メニュー即閉じを回避する。
+            let handle = app.handle().clone();
+            let state = app.state::<Arc<Mutex<AppState>>>().inner().clone();
+            app.handle().run_on_main_thread(move || {
+                #[cfg(target_os = "macos")]
+                {
+                    use objc2::MainThreadMarker;
+                    use objc2_app_kit::{NSApplication, NSApplicationActivationPolicy};
+                    unsafe {
+                        let mtm = MainThreadMarker::new_unchecked();
+                        NSApplication::sharedApplication(mtm)
+                            .setActivationPolicy(NSApplicationActivationPolicy::Accessory);
+                    }
+                }
+
+                tray::setup_tray(&handle).expect("failed to setup tray");
+                timer::start_timer(handle, state);
+            })?;
 
             Ok(())
         })

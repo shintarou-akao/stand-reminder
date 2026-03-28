@@ -11,10 +11,10 @@ fn load_tray_icon() -> tauri::image::Image<'static> {
     tauri::include_image!("icons/tray.png")
 }
 
-pub fn setup_tray(app: &tauri::App) -> tauri::Result<()> {
+pub fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
     let state = app.state::<Arc<Mutex<AppState>>>();
     let snapshot = state.lock().unwrap().snapshot();
-    let menu = build_menu(app.handle(), &snapshot)?;
+    let menu = build_menu(app, &snapshot)?;
 
     let icon = load_tray_icon();
 
